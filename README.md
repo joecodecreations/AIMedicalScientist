@@ -2,7 +2,7 @@
 ![Image description](src/images/header.jpg)
 
 <div style="color:white; background:red; padding:10px; text-align:center; font-weight:bold;">
-  **This repo is NOT ready for use yet.**
+  <h2> This repo is NOT ready for use yet. </h2>
 </div>
 
 ## Summary
