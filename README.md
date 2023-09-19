@@ -1,7 +1,7 @@
 # AI Medical Scientist
 ![Image description](src/images/header.jpg)
 
-<div style="color:white; background:red; padding:10px; text-align:center; font-weight:bold;">
+<div style="color:red; background:red; padding:10px; text-align:center; font-weight:bold;">
   <h2> This repo is NOT ready for use yet. </h2>
 </div>
 
