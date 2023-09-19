@@ -1,3 +1,16 @@
+# Ignore all folders inside /data
+/data/*
+!data/.gitkeep
+
+# Do not ignore the /data folder itself
+!/data/
+
+
+
+
+#### below is generic .gitignore file for python projects ####
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
