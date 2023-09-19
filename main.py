@@ -4,6 +4,7 @@
 from src.ai import call_ai
 
 def main():
+    print('\n\n Program Start \n\n')
     message = call_ai()
     print(message)
 
