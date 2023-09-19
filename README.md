@@ -1,4 +1,7 @@
 # AI Medical Scientist
+<div style="color:white; background-color:red; padding:10px; text-align:center; font-weight:bold;">
+  This repo is NOT ready for use yet.
+</div>
 
 ## Summary
 
