@@ -13,6 +13,20 @@ This repository aims to revolutionize the way information about diseases—both 
 
 The extensive body of medical research generated in academic settings frequently goes unnoticed by overburdened clinicians who could benefit from these advancements. Utilizing artificial intelligence—particularly sophisticated language models—and engineering automation techniques, we can develop a streamlined, highly effective system to seamlessly disseminate crucial medical information to healthcare professionals, thereby enhancing patient care and treatment outcomes.
 
+## Instructions
+
+1. Clone the repository `git clone git@github.com:joecodecreations/AIMedicalScientist.git`
+2. Install requirements `pip install -r requirements.txt`
+3. Move .env.sample to .env to store environment variables `mv .env.sample .env`
+4. Add your openAI token into the `.env` file and save the file
+5. Set the subject `RESEARCH_TOPIC` in the `.env` file
+6. Run `python main.py` to execute the program and gather research details
+
+Now your files should be contained within the `/data/` subfolder broken down by category and topics within each category.
+
+
+
+
 ## Disclaimer & Disclosure
 
 This system / code is intended to serve as a supplementary resource for medical professionals, researchers, and individuals interested in obtaining a broad overview of diseases and related treatments. It should not be used as a substitute for professional medical advice, diagnosis, or treatment. The data and analysis provided by this automated platform are sourced from Large Language Models and curated databases, and while we strive for accuracy, we cannot guarantee the completeness or timeliness of the information presented.
