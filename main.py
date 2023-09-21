@@ -5,7 +5,15 @@ import json
 import shutil
 
 # Import the hello_world function from the module1.py file in the src package
-from src.ai import call_ai
+
+# Causes
+from src.causes import typical_causes
+from src.causes import non_typical_causes
+
+# Genetic Markers
+from src.genetic_markers import known_genetic_markers
+from src.genetic_markers import speculative_genetic_markers
+
 from src.ai import gather_categorical_data
 from src.utilities import write_file
 load_dotenv()
@@ -36,12 +44,25 @@ def main():
         os.makedirs("./data")
     
     # Gather Categories & Data from AI
-    categorical_data = gather_categorical_data()
+    # categorical_data = gather_categorical_data()
 
     # Create a folder structure based on the categories and subjects
-    storeCategoricalData(categorical_data)
+    # storeCategoricalData(categorical_data)
 
-    print(categorical_data)
+    # Gather Typical Causes & Data from AI
+    typical_causes_data = typical_causes()
+    write_file('./data/causes','typical_causes.txt', typical_causes_data)
+
+    # Gather Non Typical Causes & Data from AI
+    non_typical_causes_data = non_typical_causes()
+    write_file('./data/causes','non_typical_causes.txt', non_typical_causes_data)
+
+
+    speculative_genetic_markers_data = speculative_genetic_markers()
+    write_file('./data/genetic_markers','speculative.txt', speculative_genetic_markers_data)
+
+    known_genetic_markers_data = known_genetic_markers()
+    write_file('./data/genetic_markers','known.txt', known_genetic_markers_data)
 
 
 

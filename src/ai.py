@@ -49,3 +49,10 @@ def gather_categorical_data():
     system_message = f'{general_details} {data_response_description} for the following topic: {research_topic} {final_instructions}'
     categorical_data = call_ai(system_message, '')
     return categorical_data
+
+
+def typical_causes():
+    research_topic = os.getenv("RESEARCH_TOPIC")
+    system_message = f'What are typical causes for {research_topic}. Start by providing a bulleted list and then go into detail for each bullet point restating the name and then details of each cause.'
+    typical_causes_data = call_ai(system_message, '')
+    return typical_causes_data
