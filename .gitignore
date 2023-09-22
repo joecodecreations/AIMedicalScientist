@@ -2,6 +2,9 @@
 /data/*
 !data/.gitkeep
 
+/reports/*
+!reports/.gitkeep
+
 # Do not ignore the /data folder itself
 !/data/
 

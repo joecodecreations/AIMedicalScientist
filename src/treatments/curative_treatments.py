@@ -26,6 +26,7 @@ def curative_rx_treatments():
     log('INFO', f"Getting {scope} {key_document_focus}s using {topic}s")
     rx_data = researcher(key_document_focus, scope, topic, outcome, additionals)
     write_file('treatments/currative','perscriptions.txt', rx_data)
+    os.environ['curative_rx_treatments'] = rx_data
     return
 
 def curative_vitamin_treatments():
@@ -36,6 +37,7 @@ def curative_vitamin_treatments():
     log('INFO', f"Getting {scope} {key_document_focus}s using {topic}s")
     vitamin_data = researcher(key_document_focus, scope, topic, outcome, additionals)
     write_file('treatments/currative','vitamin_treatments.txt', vitamin_data)
+    os.environ['curative_vitamin_treatments'] = vitamin_data
     
     return
 
@@ -47,6 +49,7 @@ def curative_surgery_treatments():
     log('INFO', f"Getting {scope} {key_document_focus}s using {topic}s")
     surgery_data = researcher(key_document_focus, scope, topic, outcome, additionals)
     write_file('treatments/currative','surgery_treatments.txt', surgery_data)
+    os.environ['curative_surgery_treatments'] = surgery_data
     return
 
 

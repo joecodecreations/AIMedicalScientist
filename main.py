@@ -9,6 +9,7 @@ import multiprocessing as mp
 from src.utilities.files import read_settings_ini_file
 from src.utilities.files import check_and_clear_data
 from src.utilities.log import log
+from src.utilities.pdf import create_pdf
 
 # Causes
 from src.causes import typical_causes
@@ -53,7 +54,8 @@ def main():
     os.environ['OPENAI_MODEL'] = settings["ai"]["MODEL"]
 
     # Set Research Topic from settings.ini
-    os.environ['RESEARCH_TOPIC'] = settings["software"]["RESEARCH_TOPIC"]
+    research_topic = settings["software"]["RESEARCH_TOPIC"]
+    os.environ['RESEARCH_TOPIC'] = research_topic
     # Sets software type (e.g. "HEALTHCARE", "RESEARCH", etc.) from settings.ini
     os.environ['SOFTWARE_TYPE'] = settings["software"]["TYPE"]
     # Sets log level from settings.ini
@@ -68,27 +70,30 @@ def main():
     pool = mp.Pool(mp.cpu_count())
 
     if(flags['top_level_flags']['causes']):
-        pool.apply_async(non_typical_causes, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
-        pool.apply_async(typical_causes, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
+        pool.apply_async(non_typical_causes, args=(), callback=pool_item_completed, error_callback=pool_item_error)
+        pool.apply_async(typical_causes, args=(), callback=pool_item_completed, error_callback=pool_item_error)
 
     if(flags['top_level_flags']['genetics']):
-        pool.apply_async(known_genetic_markers, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
-        pool.apply_async(speculative_genetic_markers, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
+        pool.apply_async(known_genetic_markers, args=(), callback=pool_item_completed, error_callback=pool_item_error)
+        pool.apply_async(speculative_genetic_markers, args=(), callback=pool_item_completed, error_callback=pool_item_error)
 
     if(flags['top_level_flags']['treatments']):
-        pool.apply_async(symptomatic_rx_treatments, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
-        pool.apply_async(symptomatic_vitamin_treatments, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
-        pool.apply_async(symptomatic_surgery_treatments, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
+        pool.apply_async(symptomatic_rx_treatments, args=(), callback=pool_item_completed, error_callback=pool_item_error)
+        pool.apply_async(symptomatic_vitamin_treatments, args=(), callback=pool_item_completed, error_callback=pool_item_error)
+        pool.apply_async(symptomatic_surgery_treatments, args=(), callback=pool_item_completed, error_callback=pool_item_error)
 
     if(flags['top_level_flags']['cures']):
-        pool.apply_async(curative_rx_treatments, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
-        pool.apply_async(curative_vitamin_treatments, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
-        pool.apply_async(curative_surgery_treatments, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
+        pool.apply_async(curative_rx_treatments, args=(), callback=pool_item_completed, error_callback=pool_item_error)
+        pool.apply_async(curative_vitamin_treatments, args=(), callback=pool_item_completed, error_callback=pool_item_error)
+        pool.apply_async(curative_surgery_treatments, args=(), callback=pool_item_completed, error_callback=pool_item_error)
 
     pool.close()
     pool.join()
 
+    research_topic_file_name = research_topic.replace(" ", "_")
+    create_pdf("A.I. Medical Scientist", "Hello world", F'/reports/{research_topic_file_name}.pdf')
 
 # Entry point of the application
 if __name__ == "__main__":
     main()
+    
