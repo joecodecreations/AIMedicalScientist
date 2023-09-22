@@ -6,16 +6,14 @@ import shutil
 
 # Import the hello_world function from the module1.py file in the src package
 
+from src.utilities.files import read_settings_ini_file
+from src.utilities.files import check_and_clear_data
 # Causes
-from src.causes import typical_causes
-from src.causes import non_typical_causes
+from src.causes import causes
+from src.genetic_markers import genetic_markers
+from src.treatments.symptomatic_treatments import symptomatic_treatments
+from src.treatments.curative_treatments import curative_treatments
 
-# Genetic Markers
-from src.genetic_markers import known_genetic_markers
-from src.genetic_markers import speculative_genetic_markers
-
-from src.ai import gather_categorical_data
-from src.utilities import write_file
 load_dotenv()
 
 
@@ -35,36 +33,42 @@ def storeCategoricalData(data):
 
 def main():
 
-    if os.getenv("CLEAR_DATA_ON_STARTUP") != 'false':
-        # Delete the folder and all its contents
-        if os.path.exists("./data"):
-            shutil.rmtree("./data")
+    # Gather System Settings and flags 
+    settings = read_settings_ini_file()
 
-        # Create a new, empty folder with the same name
-        os.makedirs("./data")
-    
+    flags = settings["flags"]
+
+    #Set AI Model
+    os.environ['OPENAI_MODEL'] = settings["ai"]["MODEL"]
+
+    # Set Research Topic
+    os.environ['RESEARCH_TOPIC'] = settings["software"]["RESEARCH_TOPIC"]
+    # Set the software type (e.g. "HEALTHCARE", "RESEARCH", etc.)
+    os.environ['SOFTWARE_TYPE'] = settings["software"]["TYPE"]
+
+
+    # Clear the data folder if the setting is set to true
+    if(settings["software"]["CLEAR_DATA_ON_STARTUP"]):
+        check_and_clear_data()
+
+
+
     # Gather Categories & Data from AI
     # categorical_data = gather_categorical_data()
 
     # Create a folder structure based on the categories and subjects
     # storeCategoricalData(categorical_data)
 
-    # Gather Typical Causes & Data from AI
-    typical_causes_data = typical_causes()
-    write_file('./data/causes','typical_causes.txt', typical_causes_data)
+    if(flags['top_level_flags']['causes']):
+        causes()
 
-    # Gather Non Typical Causes & Data from AI
-    non_typical_causes_data = non_typical_causes()
-    write_file('./data/causes','non_typical_causes.txt', non_typical_causes_data)
+    if(flags['top_level_flags']['genetics']):
+        genetic_markers()
 
+    if(flags['top_level_flags']['treatments']):
+        symptomatic_treatments()
 
-    speculative_genetic_markers_data = speculative_genetic_markers()
-    write_file('./data/genetic_markers','speculative.txt', speculative_genetic_markers_data)
-
-    known_genetic_markers_data = known_genetic_markers()
-    write_file('./data/genetic_markers','known.txt', known_genetic_markers_data)
-
-
+        curative_treatments()
 
 
 # Entry point of the application

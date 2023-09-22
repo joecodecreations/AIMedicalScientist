@@ -40,17 +40,6 @@ def call_ai(system_message=None, user_content=None):
     # Return the content of the AI's response
     return completion['choices'][0]['message']['content']
 
-def gather_categorical_data():
-    research_topic = os.getenv("RESEARCH_TOPIC")
-    categories = os.getenv('DATA_CATEGORIES')
-    data_response_description='and return data in an array of JSON with the topic / category in the key of the json "category" and the listen item in the key of the JSON as "subject"'
-    general_details = f'List all keywords I should search for to find the most state of the art treatment and potential cures (even if unproven without sufficient evidence yet such as double blind studies) and add the following categories: {categories}'
-    final_instructions = 'and only return the array and no other text outside. The response should start with a [ and end with a ]'
-    system_message = f'{general_details} {data_response_description} for the following topic: {research_topic} {final_instructions}'
-    categorical_data = call_ai(system_message, '')
-    return categorical_data
-
-
 def typical_causes():
     research_topic = os.getenv("RESEARCH_TOPIC")
     system_message = f'What are typical causes for {research_topic}. Start by providing a bulleted list and then go into detail for each bullet point restating the name and then details of each cause.'
