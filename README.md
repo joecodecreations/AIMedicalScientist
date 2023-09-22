@@ -57,12 +57,12 @@ There are two main types of automated AIMS categories, Medical & Research. Here'
 
   ##### Medical: 
 
-    Medical attempts to provide you information on cures, treatments, known genetic bio marker information and speculative data related to an illness, medical condition, cancer etc. 
+  Medical attempts to provide you information on cures, treatments, known genetic bio marker information and speculative data related to an illness, medical condition, cancer etc. 
 
   ##### Research: 
-
-    Research should be used when you're wanting information on something that doesn't fall under Medical but might be a singular item like a perscription drug, molecule, DNA bio marker or sequence, compound, chemical etc. and will try to find as much information about these for you as possible. This could be things like: known & speculative uses, dosage, LD50 levels, poison control information and more. 
-
+      ```
+  Research should be used when you're wanting information on something that doesn't fall under Medical but might be a singular item like a perscription drug, molecule, DNA bio marker or sequence, compound, chemical etc. and will try to find as much information about these for you as possible. This could be things like: known & speculative uses, dosage, LD50 levels, poison control information and more. 
+      ```
 
 
 
