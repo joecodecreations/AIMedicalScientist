@@ -4,6 +4,7 @@
 
 /reports/*
 !reports/.gitkeep
+!reports/sample.pdf
 
 # Do not ignore the /data folder itself
 !/data/
