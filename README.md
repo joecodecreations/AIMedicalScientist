@@ -1,4 +1,6 @@
-# AI Medical Scientist
+# A.I. Medical Scientist
+
+## A research and healthcare automated data provider leveraging artificial intelligence
 ![Image description](images/header.jpg)
 
 <div style="color:red; background:red; padding:10px; text-align:center; font-weight:bold;">
