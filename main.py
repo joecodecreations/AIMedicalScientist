@@ -2,73 +2,91 @@
 from dotenv import load_dotenv
 import os
 import json
-import shutil
+import multiprocessing as mp
 
-# Import the hello_world function from the module1.py file in the src package
 
+# File Utilities & Logger
 from src.utilities.files import read_settings_ini_file
 from src.utilities.files import check_and_clear_data
+from src.utilities.log import log
+
 # Causes
-from src.causes import causes
-from src.genetic_markers import genetic_markers
-from src.treatments.symptomatic_treatments import symptomatic_treatments
-from src.treatments.curative_treatments import curative_treatments
+from src.causes import typical_causes
+from src.causes import non_typical_causes
+
+# Genetic Markers
+from src.genetic_markers import known_genetic_markers
+from src.genetic_markers import speculative_genetic_markers
+
+# Symptom Treatments
+from src.treatments.symptomatic_treatments import symptomatic_rx_treatments
+from src.treatments.symptomatic_treatments import symptomatic_vitamin_treatments
+from src.treatments.symptomatic_treatments import symptomatic_surgery_treatments
+
+# Cures
+from src.treatments.curative_treatments import curative_rx_treatments
+from src.treatments.curative_treatments import curative_vitamin_treatments
+from src.treatments.curative_treatments import curative_surgery_treatments
 
 load_dotenv()
 
 
+def pool_item_completed(args):
+    return
 
-def storeCategoricalData(data):
-     # Convert the string to an array if necessary
-    if isinstance(data, str):
-        data = json.loads(data)
-
-    # for each item in data array, create a folder with the name of the category if it doesnt already exist
-    # create a subfolder within it with the name of the subject
-    for item in data:
-        if not os.path.exists(f'data/{item["category"]}/{item["subject"]}'):
-            os.makedirs(f'data/{item["category"]}/{item["subject"]}')
+def pool_item_error(error):
+    print(error)
 
             
 
 def main():
 
-    # Gather System Settings and flags 
+    log('INFO', 'Starting the application')
+
+    # Gather System Settings and flags from settings.ini
     settings = read_settings_ini_file()
 
+    # sets system flags from from settings.ini
     flags = settings["flags"]
 
-    #Set AI Model
+    #Set AI Model from settings.ini
     os.environ['OPENAI_MODEL'] = settings["ai"]["MODEL"]
 
-    # Set Research Topic
+    # Set Research Topic from settings.ini
     os.environ['RESEARCH_TOPIC'] = settings["software"]["RESEARCH_TOPIC"]
-    # Set the software type (e.g. "HEALTHCARE", "RESEARCH", etc.)
+    # Sets software type (e.g. "HEALTHCARE", "RESEARCH", etc.) from settings.ini
     os.environ['SOFTWARE_TYPE'] = settings["software"]["TYPE"]
+    # Sets log level from settings.ini
+    os.environ['LOG_LEVEL'] = settings["system"]["log_level"]
 
+    
 
     # Clear the data folder if the setting is set to true
     if(settings["software"]["CLEAR_DATA_ON_STARTUP"]):
         check_and_clear_data()
 
-
-
-    # Gather Categories & Data from AI
-    # categorical_data = gather_categorical_data()
-
-    # Create a folder structure based on the categories and subjects
-    # storeCategoricalData(categorical_data)
+    pool = mp.Pool(mp.cpu_count())
 
     if(flags['top_level_flags']['causes']):
-        causes()
+        pool.apply_async(non_typical_causes, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
+        pool.apply_async(typical_causes, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
 
     if(flags['top_level_flags']['genetics']):
-        genetic_markers()
+        pool.apply_async(known_genetic_markers, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
+        pool.apply_async(speculative_genetic_markers, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
 
     if(flags['top_level_flags']['treatments']):
-        symptomatic_treatments()
+        pool.apply_async(symptomatic_rx_treatments, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
+        pool.apply_async(symptomatic_vitamin_treatments, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
+        pool.apply_async(symptomatic_surgery_treatments, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
 
-        curative_treatments()
+    if(flags['top_level_flags']['cures']):
+        pool.apply_async(curative_rx_treatments, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
+        pool.apply_async(curative_vitamin_treatments, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
+        pool.apply_async(curative_surgery_treatments, args=(), callback=pool_item_completed, pool_item_error=pool_item_error)
+
+    pool.close()
+    pool.join()
 
 
 # Entry point of the application

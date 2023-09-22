@@ -25,6 +25,8 @@ def write_file(path, filename, content):
  
     with open(f"{filepath}{filename}", 'w') as f:
         f.write(content)
+    
+    return
 
 
 def check_and_clear_data():

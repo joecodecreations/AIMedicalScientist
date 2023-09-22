@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import os
+
 import openai  # Don't forget to import the openai module
 
 def call_ai(system_message=None, user_content=None):

@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 import os
 from src.utilities.files import write_file
 from src.utilities.researcher import researcher
+from src.utilities.log import log
 load_dotenv()
 data_format = 'Start by providing a bulleted list and then go into detail for each bullet point restating the name and then details of each cause.'
 key_document_focus="currative treatment"
@@ -22,34 +23,30 @@ def curative_rx_treatments():
     topic="perscription"
     outcome="cure" 
     additionals="This list should not include major medical treatments or proceedures like chemo or surgery."
-    data = researcher(key_document_focus, scope, topic, outcome, additionals)
-    return data
+    log('INFO', f"Getting {scope} {key_document_focus}s using {topic}s")
+    rx_data = researcher(key_document_focus, scope, topic, outcome, additionals)
+    write_file('treatments/currative','perscriptions.txt', rx_data)
+    return
 
 def curative_vitamin_treatments():
     scope="the most typical/common"
     topic="vitamin"
     outcome="cure" 
     additionals=""
-    data = researcher(key_document_focus, scope, topic, outcome, additionals)
-    return data
+    log('INFO', f"Getting {scope} {key_document_focus}s using {topic}s")
+    vitamin_data = researcher(key_document_focus, scope, topic, outcome, additionals)
+    write_file('treatments/currative','vitamin_treatments.txt', vitamin_data)
+    
+    return
 
 def curative_surgery_treatments():
     scope="the most typical/common"
     topic="surgery"
     outcome="cure" 
     additionals= f"Only list surgical currative process. Do not include perscription, chemo etc. Only show surgical."
-    data = researcher(key_document_focus, scope, topic, outcome, additionals)
-    return data
-
-def curative_treatments():
-    
-    rx_data = curative_rx_treatments()
-    write_file('treatments/currative','perscription_treatments.txt', rx_data)
-
-    vitamin_data = curative_vitamin_treatments()
-    write_file('treatments/currative','vitamin_treatments.txt', vitamin_data)
-
-    surgery_data = curative_surgery_treatments()
+    log('INFO', f"Getting {scope} {key_document_focus}s using {topic}s")
+    surgery_data = researcher(key_document_focus, scope, topic, outcome, additionals)
     write_file('treatments/currative','surgery_treatments.txt', surgery_data)
+    return
 
 
