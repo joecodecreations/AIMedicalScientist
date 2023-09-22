@@ -10,12 +10,18 @@ from dotenv import load_dotenv
 import os
 from src.utilities.files import write_file
 from src.utilities.researcher import researcher
+from src.utilities.researcher import researcher_specific
 from src.utilities.log import log
 
 load_dotenv()
-data_format = 'Start by providing a bulleted list and then go into detail for each bullet point restating the name and then details of each cause.'
-key_document_focus="currative treatment"
 research_topic = os.getenv("RESEARCH_TOPIC")
+top_level_topic = 'symptom'
+file_path = 'treatments/symptomatic'
+find_ending_name = 'treatments'
+main_ask=f"List symptoms for {research_topic} and then under each {top_level_topic} list the treatment for it available one per array but only list"
+data_format = 'Respond with Array of JSON for each. Include the Title, a brief summary and sentences to describe how it is used in this situation. For example: [{ title: "Symptom A", summary: "Symptom A is a blank", Sentences: ["Symptom A is typically treated with...", "Also, research has shown that Vitamin A has increased..."] } ]. Then the array contains as many as necessary to list out all of the information'
+key_document_focus="currative treatment"
+
 
 
 # Symptomatic Perscriptions
@@ -23,28 +29,33 @@ def symptomatic_rx_treatments():
     scope="the most typical/common"
     topic="perscription"
     outcome="symptomatic treatment" #keep singular
-    additionals="This list should not include major medical treatments or proceedures like chemo or surgery."
+    additionals=f"{main_ask }{topic}s that can ease this {top_level_topic} not cure and only list it if there are a {topic} that can treat / relief but not cure this. {data_format}"
     log('INFO', f"Getting {scope} {key_document_focus}s using {topic}s")
-    rx_treatments = researcher(key_document_focus, scope, topic, outcome, additionals)
-    write_file('treatments/symptomatic','perscription_treatments.txt', rx_treatments)
-    return
+    rx = researcher_specific(additionals, '')
+    write_file(file_path, f'perscription_{find_ending_name}.txt', rx)
+    os.environ['symptomatic_rx_treatments'] = rx
+    return rx
 # Sym
 def symptomatic_vitamin_treatments():
     scope="the most typical/common"
     topic="vitamin"
     outcome="symptomatic treatment" #keep singular
-    additionals="Only mention the symptom if a vitamin treatment is a potential whether confirmed or speculative. No perscriptions surgery etc."
+    additionals=f"{main_ask }{topic}s that can ease this {top_level_topic} not cure and only list it if there are a {topic} that can treat / relief but not cure this. {data_format}"
+   
+    # additionals="Only mention the symptom if a vitamin treatment is a potential whether confirmed or speculative. No perscriptions surgery etc."
     log('INFO', f"Getting {scope} {key_document_focus}s using {topic}s")
-    vitamin_data = researcher(key_document_focus, scope, topic, outcome, additionals)
-    write_file('treatments/symptomatic','vitamin_treatments.txt', vitamin_data)
-    return
+    vitamins = researcher_specific(additionals, '')
+    write_file(file_path,f'vitamin_{find_ending_name}.txt', vitamins)
+    os.environ['symptomatic_vitamin_treatments'] = vitamins
+    return vitamins
 
 def symptomatic_surgery_treatments():
     scope="the most typical/common"
     topic="surgery"
     outcome="symptomatic treatment" #keep singular
-    additionals= f"List any sugical proceedures that can be done to eleviate or eliminate any symptoms for {research_topic}. Only show mention symptom if there are confirmed surgical proceedures for it. Do not include perscription, chemo etc. Only show surgical."
+    additionals=f"{main_ask }{topic}s that can ease this {top_level_topic} not cure and only list it if there are a {topic} that can treat / relief but not cure this. {data_format}"
     log('INFO', f"Getting {scope} {key_document_focus}s using {topic}s")
-    surg_treatments = researcher(key_document_focus, scope, topic, outcome, additionals)
-    write_file('treatments/symptomatic','surgery_treatments.txt', surg_treatments)
-    return
+    surgery = researcher_specific(additionals, '')
+    write_file(file_path, f'surgery_{find_ending_name}.txt', surgery)
+    os.environ['symptomatic_surgery_treatments'] = surgery
+    return surgery

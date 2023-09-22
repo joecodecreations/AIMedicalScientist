@@ -42,7 +42,7 @@ def pool_item_error(error):
 
 def main():
 
-    log('INFO', 'Starting the application')
+    log('INFO', '>>>>>>>>>Starting the application')
 
     # Gather System Settings and flags from settings.ini
     settings = read_settings_ini_file()
@@ -57,12 +57,14 @@ def main():
     research_topic = settings["software"]["RESEARCH_TOPIC"]
     os.environ['RESEARCH_TOPIC'] = research_topic
     # Sets software type (e.g. "HEALTHCARE", "RESEARCH", etc.) from settings.ini
-    os.environ['SOFTWARE_TYPE'] = settings["software"]["TYPE"]
+    software_type = settings["software"]["TYPE"]
+    os.environ['SOFTWARE_TYPE'] = software_type
     # Sets log level from settings.ini
     os.environ['LOG_LEVEL'] = settings["system"]["log_level"]
 
     
 
+    log('INFO', f'>>>>>>>>>>>>>>>> Running {software_type} report on ' + research_topic)
     # Clear the data folder if the setting is set to true
     if(settings["software"]["CLEAR_DATA_ON_STARTUP"]):
         check_and_clear_data()
@@ -78,9 +80,18 @@ def main():
         pool.apply_async(speculative_genetic_markers, args=(), callback=pool_item_completed, error_callback=pool_item_error)
 
     if(flags['top_level_flags']['treatments']):
-        pool.apply_async(symptomatic_rx_treatments, args=(), callback=pool_item_completed, error_callback=pool_item_error)
-        pool.apply_async(symptomatic_vitamin_treatments, args=(), callback=pool_item_completed, error_callback=pool_item_error)
-        pool.apply_async(symptomatic_surgery_treatments, args=(), callback=pool_item_completed, error_callback=pool_item_error)
+        symptomatic_rx_treatments_final = pool.apply_async(symptomatic_rx_treatments, [])
+        symptomatic_vitamin_treatments_final = pool.apply_async(symptomatic_vitamin_treatments, [])
+        symptomatic_surgery_treatments_final = pool.apply_async(symptomatic_surgery_treatments, [])
+
+        symptomatic_rx_treatments_results = symptomatic_rx_treatments_final.get()
+        os.environ['symptomatic_rx_treatments'] = symptomatic_rx_treatments_results
+        
+        symptomatic_vitamin_treatments_results = symptomatic_vitamin_treatments_final.get()
+        os.environ['symptomatic_vitamin_treatments'] = symptomatic_vitamin_treatments_results
+        
+        symptomatic_surgery_treatments_results = symptomatic_surgery_treatments_final.get()
+        os.environ['symptomatic_surgery_treatments'] = symptomatic_surgery_treatments_results
 
     if(flags['top_level_flags']['cures']):
         pool.apply_async(curative_rx_treatments, args=(), callback=pool_item_completed, error_callback=pool_item_error)
@@ -91,7 +102,7 @@ def main():
     pool.join()
 
     research_topic_file_name = research_topic.replace(" ", "_")
-    create_pdf("A.I. Medical Scientist", "Hello world", F'/reports/{research_topic_file_name}.pdf')
+    create_pdf("A.I. Medical Scientist", "Hello world", F'./reports/{research_topic_file_name}.pdf')
 
 # Entry point of the application
 if __name__ == "__main__":

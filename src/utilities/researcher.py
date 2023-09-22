@@ -23,3 +23,8 @@ def researcher(key_document_focus, scope, topic, outcome, additionals, data_form
     system_message = f'For each {key_document_focus} available for {research_topic}, list each {key_document_focus} and provide {scope} {topic}s used to {outcome} {research_topic} if any. {additionals} {data_format}'
     data = call_ai(system_message, '')
     return data
+
+
+def researcher_specific(system_message, user_content):
+    data = call_ai(system_message, user_content)
+    return data
